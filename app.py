@@ -62,13 +62,42 @@ st.markdown("""
     }
     
     .countdown-text {
-        font-size: 45px;
-        font-weight: bold;
+        font-size: 55px;
+        font-weight: 900;
         color: #ffff00;
         text-align: center;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
     }
     
-    /* CSS bo góc cho ảnh hiển thị */
+    /* CHỮ THẮNG / THUA TO GIỮA MÀN HÌNH */
+    .big-result-win {
+        font-size: 65px;
+        font-weight: 900;
+        color: #00ff66;
+        text-align: center;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+        padding: 10px;
+        animation: popin 0.3s ease-out;
+    }
+    .big-result-lose {
+        font-size: 65px;
+        font-weight: 900;
+        color: #ff3333;
+        text-align: center;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+        padding: 10px;
+        animation: popin 0.3s ease-out;
+    }
+    .big-result-draw {
+        font-size: 65px;
+        font-weight: 900;
+        color: #ffea00;
+        text-align: center;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+        padding: 10px;
+        animation: popin 0.3s ease-out;
+    }
+
     [data-testid="stImage"] img {
         border-radius: 15px;
         height: 230px;
@@ -94,7 +123,7 @@ def play_sound_effect(file_path):
             b64 = base64.b64encode(data).decode()
             sound_html = f"""
                 <iframe src="data:audio/mp3;base64,{b64}" allow="autoplay" id="audio" style="display:none"></iframe>
-                <audio autoplay>
+                <audio autoplay style="display:none;">
                     <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
                 </audio>
             """
@@ -103,12 +132,12 @@ def play_sound_effect(file_path):
 # --- TIÊU ĐỀ GAME ---
 st.markdown("<div class='title-text'>💖 OẮN TÙ TÌ CÙNG AN NHI 💖</div>", unsafe_allow_html=True)
 
-# --- THANH PHÁT NHẠC NỀN TIKTOK (Giúp trình duyệt không bị chặn) ---
+# Bật/Tắt Nhạc Nền
 with st.expander("🎵 Bật/Tắt Nhạc Nền TikTok"):
     if os.path.exists("assets/bg_sound.mp3"):
         st.audio("assets/bg_sound.mp3", loop=True)
 
-# Phát âm thanh hiệu ứng (Thắng/Thua) nếu có
+# Phát âm thanh hiệu ứng nếu có
 if st.session_state.effect_audio:
     play_sound_effect(f"assets/{st.session_state.effect_audio}")
     st.session_state.effect_audio = None
@@ -149,19 +178,22 @@ with col3:
 
 st.divider()
 
+# Khung trống phục vụ đếm ngược và hiển thị thông báo to
+placeholder = st.empty()
+
 # --- XỬ LÝ NÚT CHỌN ĐÒN VÀ ĐẾM NGƯỢC ---
 choices = ["✌️ Kéo", "✊ Búa", "🖐️ Bao"]
 
 if st.session_state.player_hp <= 0 or st.session_state.bot_hp <= 0:
     if st.session_state.player_hp <= 0:
-        st.error("😭 Bạn đã cạn máu và thua cuộc!")
+        placeholder.markdown("<div class='big-result-lose'>😭 BẠN THUA CUỘC!</div>", unsafe_allow_html=True)
         st.session_state.effect_audio = "lose_sound.mp3"
     else:
         st.balloons()
-        st.success("🎉 Bạn đã chiến thắng An Nhi!")
+        placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG CUỘC!</div>", unsafe_allow_html=True)
         st.session_state.effect_audio = "win_sound.mp3"
     
-    if st.button("🔄 Chơi lại trận mới"):
+    if st.button("🔄 Chơi lại trận mới", use_container_width=True):
         st.session_state.player_hp = 100
         st.session_state.bot_hp = 100
         st.rerun()
@@ -171,7 +203,7 @@ else:
     btn_col1, btn_col2, btn_col3 = st.columns(3)
     
     user_choice = None
-    if btn_col1.button("✌️️ Kéo", use_container_width=True):
+    if btn_col1.button("✌️ Kéo", use_container_width=True):
         user_choice = "✌️ Kéo"
     if btn_col2.button("✊ Búa", use_container_width=True):
         user_choice = "✊ Búa"
@@ -179,31 +211,33 @@ else:
         user_choice = "🖐️ Bao"
 
     if user_choice:
-        countdown_placeholder = st.empty()
-        
         # Đếm ngược 3 2 1
         for i in range(3, 0, -1):
-            countdown_placeholder.markdown(f"<div class='countdown-text'>{i}</div>", unsafe_allow_html=True)
+            placeholder.markdown(f"<div class='countdown-text'>{i}</div>", unsafe_allow_html=True)
             time.sleep(0.6)
         
-        countdown_placeholder.markdown("<div class='countdown-text'>🔥 RA ĐÒN!</div>", unsafe_allow_html=True)
+        placeholder.markdown("<div class='countdown-text'>🔥 RA ĐÒN!</div>", unsafe_allow_html=True)
         time.sleep(0.4)
-        countdown_placeholder.empty()
 
         bot_choice = random.choice(choices)
-        st.info(f"👉 Bạn ra: **{user_choice}**  |  👶 An Nhi ra: **{bot_choice}**")
-
+        
+        # Kiểm tra kết quả
         if user_choice == bot_choice:
-            st.warning("🤝 Hòa nhau rồi!")
+            placeholder.markdown("<div class='big-result-draw'>🤝 HÒA RỒI!</div>", unsafe_allow_html=True)
+            time.sleep(1.2)
         elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
              (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
              (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
-            st.success("🎉 Bạn thắng lượt này! An Nhi bị trừ 20 HP!")
+            placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG!</div>", unsafe_allow_html=True)
             st.session_state.bot_hp = max(0, st.session_state.bot_hp - 20)
             st.session_state.effect_audio = "win_sound.mp3"
+            time.sleep(1.2)
         else:
-            st.error("💔 Bạn thua lượt này! Bạn bị trừ 20 HP!")
+            placeholder.markdown("<div class='big-result-lose'>💔 BẠN THUA!</div>", unsafe_allow_html=True)
             st.session_state.player_hp = max(0, st.session_state.player_hp - 20)
             st.session_state.effect_audio = "lose_sound.mp3"
+            time.sleep(1.2)
             
+        # Tự động ẩn chữ và cập nhật giao diện
+        placeholder.empty()
         st.rerun()
