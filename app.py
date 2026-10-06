@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN HỒNG & DÒNG DONATE CỐ ĐỊNH GÓC TRÁI ---
+# --- CSS TÙY CHỈNH GIAO DIỆN HÌNH NỀN & NÚT BẤM TO KHỔNG LỒ ---
 st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
@@ -25,65 +25,79 @@ st.markdown("""
         max-width: 850px !important;
     }
     
+    /* ĐỔI HÌNH NỀN MỚI BẤT KỲ */
     .stApp {
-        background: linear-gradient(135deg, #ff75ac 0%, #ffa6c9 100%);
+        background: url("https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920") no-repeat center center fixed;
+        background-size: cover;
     }
 
     .title-text {
         text-align: center;
-        color: white;
-        font-size: 28px;
+        color: #ffffff;
+        font-size: 32px;
         font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        margin-bottom: 10px;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
+        margin-bottom: 15px;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 8px;
+        border-radius: 15px;
     }
 
     .hp-bar-container {
-        background-color: #ddd;
+        background-color: rgba(255, 255, 255, 0.4);
         border-radius: 10px;
-        height: 16px;
+        height: 18px;
         width: 100%;
         margin-top: 8px;
         overflow: hidden;
+        border: 1px solid #fff;
     }
     .hp-bar-fill {
-        background-color: #2ed573;
+        background-color: #ff4757;
         height: 100%;
         transition: width 0.3s ease;
     }
 
     .vs-text {
-        font-size: 32px;
+        font-size: 36px;
         font-weight: 900;
         color: #ffeb3b;
         text-align: center;
-        margin-top: 90px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-top: 85px;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
     }
     
+    /* ĐẾM NGƯỢC GIỮA MÀN HÌNH, SIÊU TO VÀ NỔI BẬT */
+    .countdown-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 120px;
+    }
     .countdown-text {
-        font-size: 55px;
+        font-size: 85px;
         font-weight: 900;
         color: #ffff00;
         text-align: center;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+        text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+        animation: zoomIn 0.3s ease;
     }
     
     /* HIỂN THỊ NƯỚC ĐI KHỔNG LỒ */
     .show-moves-box {
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(5px);
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
         border-radius: 20px;
-        padding: 15px;
+        padding: 20px;
         margin: 10px 0;
-        border: 2px solid rgba(255, 255, 255, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.6);
     }
     .move-item {
-        font-size: 45px;
+        font-size: 40px;
         font-weight: bold;
         color: #ffffff;
         text-align: center;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
     }
 
     /* CHỮ THẮNG / THUA TO GIỮA MÀN HÌNH */
@@ -92,7 +106,7 @@ st.markdown("""
         font-weight: 900;
         color: #00ff66;
         text-align: center;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+        text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
         padding: 5px;
     }
     .big-result-lose {
@@ -100,7 +114,7 @@ st.markdown("""
         font-weight: 900;
         color: #ff3333;
         text-align: center;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+        text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
         padding: 5px;
     }
     .big-result-draw {
@@ -108,15 +122,33 @@ st.markdown("""
         font-weight: 900;
         color: #ffea00;
         text-align: center;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+        text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
         padding: 5px;
     }
 
     [data-testid="stImage"] img {
         border-radius: 15px;
-        height: 230px;
+        height: 220px;
         object-fit: cover;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
+        border: 2px solid #fff;
+    }
+
+    /* PHÓNG TO 3 NÚT CHỌN NƯỚC ĐI */
+    div.stButton > button {
+        height: 70px !important;
+        font-size: 26px !important;
+        font-weight: bold !important;
+        border-radius: 15px !important;
+        background: linear-gradient(135deg, #ff75ac 0%, #ff4757 100%) !important;
+        color: white !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: 0px 5px 10px rgba(0,0,0,0.3) !important;
+        transition: all 0.2s ease !important;
+    }
+    div.stButton > button:hover {
+        transform: scale(1.05) !important;
+        background: linear-gradient(135deg, #ff4757 0%, #ff75ac 100%) !important;
     }
 
     /* DÒNG THÔNG TIN DONATE GÓC DƯỚI BÊN TRÁI MÀN HÌNH */
@@ -124,15 +156,16 @@ st.markdown("""
         position: fixed;
         bottom: 12px;
         left: 15px;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.6);
         color: #ffffff;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 13px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 14px;
         font-weight: bold;
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(5px);
         z-index: 9999;
-        box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -179,122 +212,4 @@ if st.session_state.effect_audio:
 col1, col2, col3 = st.columns([4, 1.5, 4])
 
 with col1:
-    st.markdown("<h4 style='text-align: center; color: white; margin-bottom: 5px;'>🐶 BẠN</h4>", unsafe_allow_html=True)
-    if os.path.exists("assets/dog.jpg"):
-        st.image("assets/dog.jpg", use_container_width=True)
-    else:
-        st.error("Không tìm thấy assets/dog.jpg")
-        
-    st.markdown(f"""
-    <div class='hp-bar-container'>
-        <div class='hp-bar-fill' style='width: {st.session_state.player_hp}%;'></div>
-    </div>
-    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px;'>HP: {st.session_state.player_hp}/100</p>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("<div class='vs-text'>VS</div>", unsafe_allow_html=True)
-
-with col3:
-    st.markdown("<h4 style='text-align: center; color: white; margin-bottom: 5px;'>👶 AN NHI</h4>", unsafe_allow_html=True)
-    if os.path.exists("assets/annhi.jpg"):
-        st.image("assets/annhi.jpg", use_container_width=True)
-    else:
-        st.error("Không tìm thấy assets/annhi.jpg")
-        
-    st.markdown(f"""
-    <div class='hp-bar-container'>
-        <div class='hp-bar-fill' style='width: {st.session_state.bot_hp}%;'></div>
-    </div>
-    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px;'>HP: {st.session_state.bot_hp}/100</p>
-    """, unsafe_allow_html=True)
-
-st.divider()
-
-placeholder = st.empty()
-
-# --- KHỞI TẠO BẢNG DỊCH NƯỚC ĐI ĐỂ TÍNH TỶ LỆ 20% ---
-winning_move_against = {
-    "✌️ Kéo": "✊ Búa",
-    "✊ Búa": "🖐️ Bao",
-    "🖐️ Bao": "✌️ Kéo"
-}
-
-losing_move_against = {
-    "✌️ Kéo": "🖐️ Bao",
-    "✊ Búa": "✌️ Kéo",
-    "🖐️ Bao": "✊ Búa"
-}
-
-# --- XỬ LÝ NÚT CHỌN ĐÒN VÀ ĐẾM NGƯỢC ---
-if st.session_state.player_hp <= 0 or st.session_state.bot_hp <= 0:
-    if st.session_state.player_hp <= 0:
-        placeholder.markdown("<div class='big-result-lose'>😭 BẠN THUA CUỘC!</div>", unsafe_allow_html=True)
-        st.session_state.effect_audio = "lose_sound.mp3"
-    else:
-        st.balloons()
-        placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG CUỘC!</div>", unsafe_allow_html=True)
-        st.session_state.effect_audio = "win_sound.mp3"
-    
-    if st.button("🔄 Chơi lại trận mới", use_container_width=True):
-        st.session_state.player_hp = 100
-        st.session_state.bot_hp = 100
-        st.rerun()
-
-else:
-    st.write("### 🎯 Chọn nước đi của bạn:")
-    btn_col1, btn_col2, btn_col3 = st.columns(3)
-    
-    user_choice = None
-    if btn_col1.button("✌️ Kéo", use_container_width=True):
-        user_choice = "✌️ Kéo"
-    if btn_col2.button("✊ Búa", use_container_width=True):
-        user_choice = "✊ Búa"
-    if btn_col3.button("🖐️ Bao", use_container_width=True):
-        user_choice = "🖐️ Bao"
-
-    if user_choice:
-        # 1. Đếm ngược 3 2 1
-        for i in range(3, 0, -1):
-            placeholder.markdown(f"<div class='countdown-text'>{i}</div>", unsafe_allow_html=True)
-            time.sleep(0.3)
-        
-        # 2. LOGIC TỶ LỆ THẮNG 20%:
-        chance = random.randint(1, 100)
-        if chance <= 20:
-            bot_choice = losing_move_against[user_choice]  # Người chơi thắng (20%)
-        else:
-            bot_choice = winning_move_against[user_choice] # Người chơi thua (80%)
-        
-        # 3. Hiển thị NƯỚC ĐI TO KHỔNG LỒ
-        moves_html = f"""
-        <div class='show-moves-box'>
-            <div style='display: flex; justify-content: space-around; align-items: center;'>
-                <div class='move-item'>🐶 Bạn<br><span style='font-size: 65px;'>{user_choice}</span></div>
-                <div style='font-size: 40px; font-weight: 900; color: #ffeb3b;'>VS</div>
-                <div class='move-item'>👶 An Nhi<br><span style='font-size: 65px;'>{bot_choice}</span></div>
-            </div>
-        </div>
-        """
-        placeholder.markdown(moves_html, unsafe_allow_html=True)
-        time.sleep(0.6)
-
-        # 4. Hiển thị KẾT QUẢ
-        if user_choice == bot_choice:
-            placeholder.markdown("<div class='big-result-draw'>🤝 HÒA RỒI!</div>", unsafe_allow_html=True)
-            time.sleep(0.6)
-        elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
-             (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
-             (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
-            placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG!</div>", unsafe_allow_html=True)
-            st.session_state.bot_hp = max(0, st.session_state.bot_hp - 20)
-            st.session_state.effect_audio = "win_sound.mp3"
-            time.sleep(0.6)
-        else:
-            placeholder.markdown("<div class='big-result-lose'>💔 BẠN THUA!</div>", unsafe_allow_html=True)
-            st.session_state.player_hp = max(0, st.session_state.player_hp - 20)
-            st.session_state.effect_audio = "lose_sound.mp3"
-            time.sleep(0.6)
-            
-        placeholder.empty()
-        st.rerun()
+    st.markdown("<h4 style='text-align: center;
