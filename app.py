@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN HÌNH NỀN ANIME NỮ & NÚT BẤM SIÊU TO ---
+# --- CSS TÙY CHỈNH GIAO DIỆN HÌNH NỀN ANIME NỮ & NÚT BẤM CHỮ KHỔNG LỒ ---
 custom_css = """
 <style>
     #MainMenu {visibility: hidden;}
@@ -148,17 +148,23 @@ custom_css = """
         border-radius: 12px;
     }
 
-    /* PHÓNG CỰC TO 3 NÚT KÉO BÚA BAO */
+    /* PHÓNG CỰC TO NÚT CẢ KHUNG LẪN CHỮ BÊN TRONG */
     div.stButton > button {
         height: 110px !important;
-        font-size: 40px !important;
-        font-weight: 900 !important;
         border-radius: 25px !important;
         background: linear-gradient(135deg, #ff75ac 0%, #ff4757 100%) !important;
-        color: #ffffff !important;
         border: 4px solid #ffffff !important;
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5) !important;
         transition: all 0.2s ease !important;
+    }
+    /* CANH CHỮ TRONG NÚT BẤM TO RÕ (BẮT TRÚNG THẺ P) */
+    div.stButton > button div p, 
+    div.stButton > button p, 
+    div.stButton > button {
+        font-size: 36px !important;
+        font-weight: 900 !important;
+        color: #ffffff !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.4) !important;
     }
     div.stButton > button:hover {
         transform: scale(1.08) !important;
@@ -263,7 +269,7 @@ placeholder = st.empty()
 
 # --- BẢNG DỊCH NƯỚC ĐI CỦA MÁY ---
 winning_move_against = {
-    "✌️ Kéo": "✊ Búa",
+    "✌️️ Kéo": "✊ Búa",
     "✊ Búa": "🖐️ Bao",
     "🖐️ Bao": "✌️ Kéo"
 }
@@ -302,47 +308,6 @@ else:
         user_choice = "🖐️ Bao"
 
     if user_choice:
-        # 1. ĐẾM NGƯỢC 3 2 1 CHẬM THÍCH HỢP (0.8s)
+        # 1. ĐẾM NGƯỢC 3 2 1
         for i in range(3, 0, -1):
-            placeholder.markdown(f"<div class='countdown-box'><div class='countdown-text'>{i}</div></div>", unsafe_allow_html=True)
-            time.sleep(0.8)
-        
-        # 2. TỶ LỆ THẮNG 20%
-        chance = random.randint(1, 100)
-        if chance <= 20:
-            bot_choice = losing_move_against[user_choice]  # Bạn thắng (20%)
-        else:
-            bot_choice = winning_move_against[user_choice] # Bạn thua (80%)
-        
-        # 3. Hiển thị NƯỚC ĐI
-        moves_html = f"""
-        <div class='show-moves-box'>
-            <div style='display: flex; justify-content: space-around; align-items: center;'>
-                <div class='move-item'>🐶 Bạn<br><span style='font-size: 75px;'>{user_choice}</span></div>
-                <div style='font-size: 45px; font-weight: 900; color: #fff200;'>VS</div>
-                <div class='move-item'>👶 An Nhi<br><span style='font-size: 75px;'>{bot_choice}</span></div>
-            </div>
-        </div>
-        """
-        placeholder.markdown(moves_html, unsafe_allow_html=True)
-        time.sleep(1.0)
-
-        # 4. Hiển thị KẾT QUẢ
-        if user_choice == bot_choice:
-            placeholder.markdown("<div class='big-result-draw'>🤝 HÒA RỒI!</div>", unsafe_allow_html=True)
-            time.sleep(1.0)
-        elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
-             (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
-             (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
-            placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG!</div>", unsafe_allow_html=True)
-            st.session_state.bot_hp = max(0, st.session_state.bot_hp - 20)
-            st.session_state.effect_audio = "win_sound.mp3"
-            time.sleep(1.0)
-        else:
-            placeholder.markdown("<div class='big-result-lose'>💔 BẠN THUA!</div>", unsafe_allow_html=True)
-            st.session_state.player_hp = max(0, st.session_state.player_hp - 20)
-            st.session_state.effect_audio = "lose_sound.mp3"
-            time.sleep(1.0)
-            
-        placeholder.empty()
-        st.rerun()
+            placeholder.markdown(f"<div class='countdown-box'><div class='countdown-text'>{i}</div></div>", unsafe_allow
