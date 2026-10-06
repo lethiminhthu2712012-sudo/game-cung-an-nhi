@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN HỒNG & VỪA KHUNG MÀN HÌNH ---
+# --- CSS TÙY CHỈNH GIAO DIỆN HỒNG & DÒNG DONATE CỐ ĐỊNH GÓC TRÁI ---
 st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
@@ -118,8 +118,27 @@ st.markdown("""
         object-fit: cover;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
     }
+
+    /* DÒNG THÔNG TIN DONATE GÓC DƯỚI BÊN TRÁI MÀN HÌNH */
+    .donate-footer {
+        position: fixed;
+        bottom: 12px;
+        left: 15px;
+        background: rgba(0, 0, 0, 0.4);
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# Hiển thị dòng Donate cố định ở góc trái
+st.markdown("<div class='donate-footer'>💌 Muốn donate liên hệ : Minh Thư (Facebook)</div>", unsafe_allow_html=True)
 
 # --- KHỞI TẠO TRẠNG THÁI GAME ---
 if 'player_hp' not in st.session_state:
@@ -192,12 +211,22 @@ with col3:
 
 st.divider()
 
-# Khung trống phục vụ đếm ngược, hiển thị nước đi và kết quả
 placeholder = st.empty()
 
-# --- XỬ LÝ NÚT CHỌN ĐÒN VÀ ĐẾM NGƯỢC ---
-choices = ["✌️ Kéo", "✊ Búa", "🖐️ Bao"]
+# --- KHỞI TẠO BẢNG DỊCH NƯỚC ĐI ĐỂ TÍNH TỶ LỆ 10% ---
+winning_move_against = {
+    "✌️ Kéo": "✊ Búa",
+    "✊ Búa": "🖐️ Bao",
+    "🖐️ Bao": "✌️ Kéo"
+}
 
+losing_move_against = {
+    "✌️ Kéo": "🖐️ Bao",
+    "✊ Búa": "✌️ Kéo",
+    "🖐️ Bao": "✊ Búa"
+}
+
+# --- XỬ LÝ NÚT CHỌN ĐÒN VÀ ĐẾM NGƯỢC ---
 if st.session_state.player_hp <= 0 or st.session_state.bot_hp <= 0:
     if st.session_state.player_hp <= 0:
         placeholder.markdown("<div class='big-result-lose'>😭 BẠN THUA CUỘC!</div>", unsafe_allow_html=True)
@@ -230,38 +259,7 @@ else:
             placeholder.markdown(f"<div class='countdown-text'>{i}</div>", unsafe_allow_html=True)
             time.sleep(0.5)
         
-        bot_choice = random.choice(choices)
-        
-        # 2. Hiển thị NƯỚC ĐI TO KHỔNG LỒ của 2 bên
-        moves_html = f"""
-        <div class='show-moves-box'>
-            <div style='display: flex; justify-content: space-around; align-items: center;'>
-                <div class='move-item'>🐶 Bạn<br><span style='font-size: 65px;'>{user_choice}</span></div>
-                <div style='font-size: 40px; font-weight: 900; color: #ffeb3b;'>VS</div>
-                <div class='move-item'>👶 An Nhi<br><span style='font-size: 65px;'>{bot_choice}</span></div>
-            </div>
-        </div>
-        """
-        placeholder.markdown(moves_html, unsafe_allow_html=True)
-        time.sleep(1.2)
-
-        # 3. Hiển thị KẾT QUẢ THẮNG / THUA / HÒA TO
-        if user_choice == bot_choice:
-            placeholder.markdown("<div class='big-result-draw'>🤝 HÒA RỒI!</div>", unsafe_allow_html=True)
-            time.sleep(1.2)
-        elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
-             (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
-             (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
-            placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG!</div>", unsafe_allow_html=True)
-            st.session_state.bot_hp = max(0, st.session_state.bot_hp - 20)
-            st.session_state.effect_audio = "win_sound.mp3"
-            time.sleep(1.2)
-        else:
-            placeholder.markdown("<div class='big-result-lose'>💔 BẠN THUA!</div>", unsafe_allow_html=True)
-            st.session_state.player_hp = max(0, st.session_state.player_hp - 20)
-            st.session_state.effect_audio = "lose_sound.mp3"
-            time.sleep(1.2)
-            
-        # Tự động ẩn và làm mới lại giao diện
-        placeholder.empty()
-        st.rerun()
+        # 2. LOGIC TỶ LỆ THẮNG 10%:
+        chance = random.randint(1, 100)
+        if chance <= 10:
+            bot_choice = losing_move_against[user_choice]
