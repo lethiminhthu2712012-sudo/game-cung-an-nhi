@@ -15,24 +15,20 @@ st.set_page_config(
 # --- CSS TÙY CHỈNH GIAO DIỆN HỒNG & VỪA KHUNG MÀN HÌNH ---
 st.markdown("""
 <style>
-    /* Ẩn header và footer mặc định của Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Cố định khung container vừa màn hình desktop */
     .block-container {
-        padding-top: 1.5rem !important;
+        padding-top: 1rem !important;
         padding-bottom: 1rem !important;
-        max-width: 800px !important;
+        max-width: 850px !important;
     }
     
-    /* Background màu hồng gradient */
     .stApp {
         background: linear-gradient(135deg, #ff75ac 0%, #ffa6c9 100%);
     }
 
-    /* Tiêu đề */
     .title-text {
         text-align: center;
         color: white;
@@ -42,22 +38,6 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
-    /* Thẻ hiển thị hình ảnh avatar */
-    .card {
-        background: white;
-        border-radius: 15px;
-        padding: 10px;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
-        text-align: center;
-    }
-    .card img {
-        width: 100%;
-        height: 220px;
-        object-fit: cover;
-        border-radius: 10px;
-    }
-
-    /* Thanh máu HP */
     .hp-bar-container {
         background-color: #ddd;
         border-radius: 10px;
@@ -72,7 +52,6 @@ st.markdown("""
         transition: width 0.3s ease;
     }
 
-    /* Chữ VS */
     .vs-text {
         font-size: 32px;
         font-weight: 900;
@@ -82,28 +61,32 @@ st.markdown("""
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     
-    /* Chữ đếm ngược */
     .countdown-text {
         font-size: 45px;
         font-weight: bold;
         color: #ffff00;
         text-align: center;
-        animation: pulse 0.5s infinite alternate;
+    }
+    
+    /* CSS bo góc và đổ bóng cho ảnh hiển thị */
+    [data-testid="stImage"] img {
+        border-radius: 15px;
+        height: 230px;
+        object-fit: cover;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- KHỞI TẠO TẠO TRẠNG THÁI GAME (SESSION STATE) ---
+# --- KHỞI TẠO TRẠNG THÁI GAME ---
 if 'player_hp' not in st.session_state:
     st.session_state.player_hp = 100
 if 'bot_hp' not in st.session_state:
     st.session_state.bot_hp = 100
-if 'game_status' not in st.session_state:
-    st.session_state.game_status = "idle" # idle, counting, result
 if 'audio_to_play' not in st.session_state:
     st.session_state.audio_to_play = "bg_sound.mp3"
 
-# --- HÀM TẢI ÂM THANH TỰ ĐỘNG PHÁT ---
+# --- HÀM TẢI ÂM THANH ---
 def play_audio(file_path):
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
@@ -116,7 +99,7 @@ def play_audio(file_path):
                 """
             st.markdown(md, unsafe_allow_html=True)
 
-# Tải âm thanh tương ứng
+# Tải âm thanh
 play_audio(f"assets/{st.session_state.audio_to_play}")
 
 # --- TIÊU ĐỀ GAME ---
@@ -126,13 +109,12 @@ st.markdown("<div class='title-text'>💖 OẮN TÙ TÌ CÙNG AN NHI 💖</div>"
 col1, col2, col3 = st.columns([4, 1.5, 4])
 
 with col1:
-    st.markdown("<h4 style='text-align: center; color: white;'>🐶 BẠN</h4>", unsafe_allow_html=True)
-    st.markdown("""
-    <div class='card'>
-        <img src='app/static/assets/dog.jpg' err-src='assets/dog.jpg'>
-    </div>
-    """, unsafe_allow_html=True)
-    # Hiển thị thanh máu Bạn
+    st.markdown("<h4 style='text-align: center; color: white; margin-bottom: 5px;'>🐶 BẠN</h4>", unsafe_allow_html=True)
+    if os.path.exists("assets/dog.jpg"):
+        st.image("assets/dog.jpg", use_container_width=True)
+    else:
+        st.error("Không tìm thấy assets/dog.jpg")
+        
     st.markdown(f"""
     <div class='hp-bar-container'>
         <div class='hp-bar-fill' style='width: {st.session_state.player_hp}%;'></div>
@@ -144,13 +126,12 @@ with col2:
     st.markdown("<div class='vs-text'>VS</div>", unsafe_allow_html=True)
 
 with col3:
-    st.markdown("<h4 style='text-align: center; color: white;'>👶 AN NHI</h4>", unsafe_allow_html=True)
-    st.markdown("""
-    <div class='card'>
-        <img src='app/static/assets/annhi.jpg' err-src='assets/annhi.jpg'>
-    </div>
-    """, unsafe_allow_html=True)
-    # Hiển thị thanh máu An Nhi
+    st.markdown("<h4 style='text-align: center; color: white; margin-bottom: 5px;'>👶 AN NHI</h4>", unsafe_allow_html=True)
+    if os.path.exists("assets/annhi.jpg"):
+        st.image("assets/annhi.jpg", use_container_width=True)
+    else:
+        st.error("Không tìm thấy assets/annhi.jpg")
+        
     st.markdown(f"""
     <div class='hp-bar-container'>
         <div class='hp-bar-fill' style='width: {st.session_state.bot_hp}%;'></div>
@@ -163,7 +144,6 @@ st.divider()
 # --- XỬ LÝ NÚT CHỌN ĐÒN VÀ ĐẾM NGƯỢC ---
 choices = ["✌️ Kéo", "✊ Búa", "🖐️ Bao"]
 
-# Kiểm tra hết máu
 if st.session_state.player_hp <= 0 or st.session_state.bot_hp <= 0:
     if st.session_state.player_hp <= 0:
         st.error("😭 Bạn đã cạn máu và thua cuộc!")
@@ -189,25 +169,21 @@ else:
     if btn_col3.button("🖐️ Bao", use_container_width=True):
         user_choice = "🖐️ Bao"
 
-    # Nếu người dùng bấm chọn đòn
     if user_choice:
         countdown_placeholder = st.empty()
         
-        # Đếm ngược 3.. 2.. 1..
+        # Đếm ngược 3 2 1
         for i in range(3, 0, -1):
             countdown_placeholder.markdown(f"<div class='countdown-text'>{i}</div>", unsafe_allow_html=True)
-            time.sleep(0.7)
+            time.sleep(0.6)
         
         countdown_placeholder.markdown("<div class='countdown-text'>🔥 RA ĐÒN!</div>", unsafe_allow_html=True)
         time.sleep(0.4)
         countdown_placeholder.empty()
 
-        # An Nhi chọn ngẫu nhiên
         bot_choice = random.choice(choices)
-        
         st.info(f"👉 Bạn ra: **{user_choice}**  |  👶 An Nhi ra: **{bot_choice}**")
 
-        # Xử lý kết quả thắng/thua/hòa
         if user_choice == bot_choice:
             st.warning("🤝 Hòa nhau rồi!")
             st.session_state.audio_to_play = "bg_sound.mp3"
