@@ -155,3 +155,113 @@ with st.expander("🎵 Bật/Tắt Nhạc Nền TikTok"):
 if st.session_state.effect_audio:
     play_sound_effect(f"assets/{st.session_state.effect_audio}")
     st.session_state.effect_audio = None
+
+# --- KHUNG HIỂN THỊ 2 NHÂN VẬT & MÁU ---
+col1, col2, col3 = st.columns([4, 1.5, 4])
+
+with col1:
+    st.markdown("<h4 style='text-align: center; color: white; margin-bottom: 5px;'>🐶 BẠN</h4>", unsafe_allow_html=True)
+    if os.path.exists("assets/dog.jpg"):
+        st.image("assets/dog.jpg", use_container_width=True)
+    else:
+        st.error("Không tìm thấy assets/dog.jpg")
+        
+    st.markdown(f"""
+    <div class='hp-bar-container'>
+        <div class='hp-bar-fill' style='width: {st.session_state.player_hp}%;'></div>
+    </div>
+    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px;'>HP: {st.session_state.player_hp}/100</p>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("<div class='vs-text'>VS</div>", unsafe_allow_html=True)
+
+with col3:
+    st.markdown("<h4 style='text-align: center; color: white; margin-bottom: 5px;'>👶 AN NHI</h4>", unsafe_allow_html=True)
+    if os.path.exists("assets/annhi.jpg"):
+        st.image("assets/annhi.jpg", use_container_width=True)
+    else:
+        st.error("Không tìm thấy assets/annhi.jpg")
+        
+    st.markdown(f"""
+    <div class='hp-bar-container'>
+        <div class='hp-bar-fill' style='width: {st.session_state.bot_hp}%;'></div>
+    </div>
+    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px;'>HP: {st.session_state.bot_hp}/100</p>
+    """, unsafe_allow_html=True)
+
+st.divider()
+
+# Khung trống phục vụ đếm ngược, hiển thị nước đi và kết quả
+placeholder = st.empty()
+
+# --- XỬ LÝ NÚT CHỌN ĐÒN VÀ ĐẾM NGƯỢC ---
+choices = ["✌️ Kéo", "✊ Búa", "🖐️ Bao"]
+
+if st.session_state.player_hp <= 0 or st.session_state.bot_hp <= 0:
+    if st.session_state.player_hp <= 0:
+        placeholder.markdown("<div class='big-result-lose'>😭 BẠN THUA CUỘC!</div>", unsafe_allow_html=True)
+        st.session_state.effect_audio = "lose_sound.mp3"
+    else:
+        st.balloons()
+        placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG CUỘC!</div>", unsafe_allow_html=True)
+        st.session_state.effect_audio = "win_sound.mp3"
+    
+    if st.button("🔄 Chơi lại trận mới", use_container_width=True):
+        st.session_state.player_hp = 100
+        st.session_state.bot_hp = 100
+        st.rerun()
+
+else:
+    st.write("### 🎯 Chọn nước đi của bạn:")
+    btn_col1, btn_col2, btn_col3 = st.columns(3)
+    
+    user_choice = None
+    if btn_col1.button("✌️ Kéo", use_container_width=True):
+        user_choice = "✌️ Kéo"
+    if btn_col2.button("✊ Búa", use_container_width=True):
+        user_choice = "✊ Búa"
+    if btn_col3.button("🖐️ Bao", use_container_width=True):
+        user_choice = "🖐️ Bao"
+
+    if user_choice:
+        # 1. Đếm ngược 3 2 1
+        for i in range(3, 0, -1):
+            placeholder.markdown(f"<div class='countdown-text'>{i}</div>", unsafe_allow_html=True)
+            time.sleep(0.5)
+        
+        bot_choice = random.choice(choices)
+        
+        # 2. Hiển thị NƯỚC ĐI TO KHỔNG LỒ của 2 bên
+        moves_html = f"""
+        <div class='show-moves-box'>
+            <div style='display: flex; justify-content: space-around; align-items: center;'>
+                <div class='move-item'>🐶 Bạn<br><span style='font-size: 65px;'>{user_choice}</span></div>
+                <div style='font-size: 40px; font-weight: 900; color: #ffeb3b;'>VS</div>
+                <div class='move-item'>👶 An Nhi<br><span style='font-size: 65px;'>{bot_choice}</span></div>
+            </div>
+        </div>
+        """
+        placeholder.markdown(moves_html, unsafe_allow_html=True)
+        time.sleep(1.2)
+
+        # 3. Hiển thị KẾT QUẢ THẮNG / THUA / HÒA TO
+        if user_choice == bot_choice:
+            placeholder.markdown("<div class='big-result-draw'>🤝 HÒA RỒI!</div>", unsafe_allow_html=True)
+            time.sleep(1.2)
+        elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
+             (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
+             (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
+            placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG!</div>", unsafe_allow_html=True)
+            st.session_state.bot_hp = max(0, st.session_state.bot_hp - 20)
+            st.session_state.effect_audio = "win_sound.mp3"
+            time.sleep(1.2)
+        else:
+            placeholder.markdown("<div class='big-result-lose'>💔 BẠN THUA!</div>", unsafe_allow_html=True)
+            st.session_state.player_hp = max(0, st.session_state.player_hp - 20)
+            st.session_state.effect_audio = "lose_sound.mp3"
+            time.sleep(1.2)
+            
+        # Tự động ẩn và làm mới lại giao diện
+        placeholder.empty()
+        st.rerun()
