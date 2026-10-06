@@ -213,7 +213,7 @@ st.divider()
 
 placeholder = st.empty()
 
-# --- KHỞI TẠO BẢNG DỊCH NƯỚC ĐI ĐỂ TÍNH TỶ LỆ 10% ---
+# --- KHỞI TẠO BẢNG DỊCH NƯỚC ĐI ĐỂ TÍNH TỶ LỆ 20% ---
 winning_move_against = {
     "✌️ Kéo": "✊ Búa",
     "✊ Búa": "🖐️ Bao",
@@ -257,14 +257,14 @@ else:
         # 1. Đếm ngược 3 2 1
         for i in range(3, 0, -1):
             placeholder.markdown(f"<div class='countdown-text'>{i}</div>", unsafe_allow_html=True)
-            time.sleep(0.5)
+            time.sleep(0.3)
         
-        # 2. LOGIC TỶ LỆ THẮNG 10%:
+        # 2. LOGIC TỶ LỆ THẮNG 20%:
         chance = random.randint(1, 100)
-        if chance <= 10:
-            bot_choice = losing_move_against[user_choice]  # Người chơi thắng (10%)
+        if chance <= 20:
+            bot_choice = losing_move_against[user_choice]  # Người chơi thắng (20%)
         else:
-            bot_choice = winning_move_against[user_choice] # Người chơi thua (90%)
+            bot_choice = winning_move_against[user_choice] # Người chơi thua (80%)
         
         # 3. Hiển thị NƯỚC ĐI TO KHỔNG LỒ
         moves_html = f"""
@@ -277,24 +277,24 @@ else:
         </div>
         """
         placeholder.markdown(moves_html, unsafe_allow_html=True)
-        time.sleep(1.2)
+        time.sleep(0.6)
 
         # 4. Hiển thị KẾT QUẢ
         if user_choice == bot_choice:
             placeholder.markdown("<div class='big-result-draw'>🤝 HÒA RỒI!</div>", unsafe_allow_html=True)
-            time.sleep(1.2)
+            time.sleep(0.6)
         elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
              (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
              (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
             placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG!</div>", unsafe_allow_html=True)
             st.session_state.bot_hp = max(0, st.session_state.bot_hp - 20)
             st.session_state.effect_audio = "win_sound.mp3"
-            time.sleep(1.2)
+            time.sleep(0.6)
         else:
             placeholder.markdown("<div class='big-result-lose'>💔 BẠN THUA!</div>", unsafe_allow_html=True)
             st.session_state.player_hp = max(0, st.session_state.player_hp - 20)
             st.session_state.effect_audio = "lose_sound.mp3"
-            time.sleep(1.2)
+            time.sleep(0.6)
             
         placeholder.empty()
         st.rerun()
