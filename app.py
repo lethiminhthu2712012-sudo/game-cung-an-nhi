@@ -68,7 +68,7 @@ st.markdown("""
         text-align: center;
     }
     
-    /* CSS bo góc và đổ bóng cho ảnh hiển thị */
+    /* CSS bo góc cho ảnh hiển thị */
     [data-testid="stImage"] img {
         border-radius: 15px;
         height: 230px;
@@ -83,27 +83,35 @@ if 'player_hp' not in st.session_state:
     st.session_state.player_hp = 100
 if 'bot_hp' not in st.session_state:
     st.session_state.bot_hp = 100
-if 'audio_to_play' not in st.session_state:
-    st.session_state.audio_to_play = "bg_sound.mp3"
+if 'effect_audio' not in st.session_state:
+    st.session_state.effect_audio = None
 
-# --- HÀM TẢI ÂM THANH ---
-def play_audio(file_path):
+# --- HÀM PHÁT ÂM THANH HIỆU ỨNG THẮNG/THUA ---
+def play_sound_effect(file_path):
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
             data = f.read()
             b64 = base64.b64encode(data).decode()
-            md = f"""
-                <audio autoplay style="display:none;">
-                <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+            sound_html = f"""
+                <iframe src="data:audio/mp3;base64,{b64}" allow="autoplay" id="audio" style="display:none"></iframe>
+                <audio autoplay>
+                    <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
                 </audio>
-                """
-            st.markdown(md, unsafe_allow_html=True)
-
-# Tải âm thanh
-play_audio(f"assets/{st.session_state.audio_to_play}")
+            """
+            st.markdown(sound_html, unsafe_allow_html=True)
 
 # --- TIÊU ĐỀ GAME ---
 st.markdown("<div class='title-text'>💖 OẮN TÙ TÌ CÙNG AN NHI 💖</div>", unsafe_allow_html=True)
+
+# --- THANH PHÁT NHẠC NỀN TIKTOK (Giúp trình duyệt không bị chặn) ---
+with st.expander("🎵 Bật/Tắt Nhạc Nền TikTok"):
+    if os.path.exists("assets/bg_sound.mp3"):
+        st.audio("assets/bg_sound.mp3", loop=True)
+
+# Phát âm thanh hiệu ứng (Thắng/Thua) nếu có
+if st.session_state.effect_audio:
+    play_sound_effect(f"assets/{st.session_state.effect_audio}")
+    st.session_state.effect_audio = None
 
 # --- KHUNG HIỂN THỊ 2 NHÂN VẬT & MÁU ---
 col1, col2, col3 = st.columns([4, 1.5, 4])
@@ -147,14 +155,15 @@ choices = ["✌️ Kéo", "✊ Búa", "🖐️ Bao"]
 if st.session_state.player_hp <= 0 or st.session_state.bot_hp <= 0:
     if st.session_state.player_hp <= 0:
         st.error("😭 Bạn đã cạn máu và thua cuộc!")
+        st.session_state.effect_audio = "lose_sound.mp3"
     else:
         st.balloons()
         st.success("🎉 Bạn đã chiến thắng An Nhi!")
+        st.session_state.effect_audio = "win_sound.mp3"
     
     if st.button("🔄 Chơi lại trận mới"):
         st.session_state.player_hp = 100
         st.session_state.bot_hp = 100
-        st.session_state.audio_to_play = "bg_sound.mp3"
         st.rerun()
 
 else:
@@ -162,7 +171,7 @@ else:
     btn_col1, btn_col2, btn_col3 = st.columns(3)
     
     user_choice = None
-    if btn_col1.button("✌️ Kéo", use_container_width=True):
+    if btn_col1.button("✌️️ Kéo", use_container_width=True):
         user_choice = "✌️ Kéo"
     if btn_col2.button("✊ Búa", use_container_width=True):
         user_choice = "✊ Búa"
@@ -186,16 +195,15 @@ else:
 
         if user_choice == bot_choice:
             st.warning("🤝 Hòa nhau rồi!")
-            st.session_state.audio_to_play = "bg_sound.mp3"
         elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
              (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
              (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
             st.success("🎉 Bạn thắng lượt này! An Nhi bị trừ 20 HP!")
             st.session_state.bot_hp = max(0, st.session_state.bot_hp - 20)
-            st.session_state.audio_to_play = "win_sound.mp3"
+            st.session_state.effect_audio = "win_sound.mp3"
         else:
             st.error("💔 Bạn thua lượt này! Bạn bị trừ 20 HP!")
             st.session_state.player_hp = max(0, st.session_state.player_hp - 20)
-            st.session_state.audio_to_play = "lose_sound.mp3"
+            st.session_state.effect_audio = "lose_sound.mp3"
             
         st.rerun()
