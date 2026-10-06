@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN NỀN HỒNG PASTEL & NÚT SIÊU TO ---
+# --- CSS TÙY CHỈNH GIAO DIỆN HÌNH NỀN ANIME NỮ & NÚT BẤM SIÊU TO ---
 custom_css = """
 <style>
     #MainMenu {visibility: hidden;}
@@ -25,9 +25,10 @@ custom_css = """
         max-width: 850px !important;
     }
     
-    /* NỀN HỒNG PASTEL MỊN MÀNG */
+    /* HÌNH NỀN ANIME NỮ KHỦNG/ĐẸP */
     .stApp {
-        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        background: url('https://images.alphacoders.com/132/1327129.png') no-repeat center center fixed;
+        background-size: cover;
     }
 
     .title-text {
@@ -35,16 +36,17 @@ custom_css = """
         color: #ffffff;
         font-size: 34px;
         font-weight: bold;
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.7);
         margin-bottom: 15px;
-        background: rgba(255, 255, 255, 0.25);
+        background: rgba(0, 0, 0, 0.4);
         padding: 10px;
         border-radius: 20px;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .hp-bar-container {
-        background-color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(0, 0, 0, 0.4);
         border-radius: 10px;
         height: 18px;
         width: 100%;
@@ -64,7 +66,7 @@ custom_css = """
         color: #fff200;
         text-align: center;
         margin-top: 85px;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
     }
     
     /* ĐẾM NGƯỢC GIỮA MÀN HÌNH */
@@ -75,28 +77,28 @@ custom_css = """
         height: 120px;
     }
     .countdown-text {
-        font-size: 90px;
+        font-size: 95px;
         font-weight: 900;
         color: #fff200;
         text-align: center;
-        text-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+        text-shadow: 4px 4px 12px rgba(0,0,0,0.9);
     }
     
     /* NƯỚC ĐI TO RÕ */
     .show-moves-box {
-        background: rgba(255, 255, 255, 0.35);
+        background: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(8px);
         border-radius: 20px;
         padding: 20px;
         margin: 10px 0;
-        border: 2px solid rgba(255, 255, 255, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.6);
     }
     .move-item {
         font-size: 40px;
         font-weight: bold;
         color: #ffffff;
         text-align: center;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
     }
 
     /* KẾT QUẢ THẮNG THUA */
@@ -105,7 +107,7 @@ custom_css = """
         font-weight: 900;
         color: #00ff66;
         text-align: center;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+        text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
         padding: 5px;
     }
     .big-result-lose {
@@ -113,7 +115,7 @@ custom_css = """
         font-weight: 900;
         color: #ff3333;
         text-align: center;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+        text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
         padding: 5px;
     }
     .big-result-draw {
@@ -121,7 +123,7 @@ custom_css = """
         font-weight: 900;
         color: #ffea00;
         text-align: center;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+        text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
         padding: 5px;
     }
 
@@ -129,24 +131,37 @@ custom_css = """
         border-radius: 15px;
         height: 220px;
         object-fit: cover;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
         border: 2px solid #fff;
     }
 
-    /* TỐI ƯU CỰC TO CHO 3 NÚT KÉO BÚA BAO */
-    div.stButton > button {
-        height: 90px !important;
-        font-size: 34px !important;
+    /* CHỮ "CHỌN NƯỚC ĐI CỦA BẠN" TO RÕ */
+    .select-title {
+        text-align: center;
+        color: #ffffff;
+        font-size: 32px !important;
         font-weight: 900 !important;
-        border-radius: 20px !important;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
+        margin-bottom: 20px;
+        background: rgba(0,0,0,0.3);
+        padding: 6px;
+        border-radius: 12px;
+    }
+
+    /* PHÓNG CỰC TO 3 NÚT KÉO BÚA BAO */
+    div.stButton > button {
+        height: 110px !important;
+        font-size: 40px !important;
+        font-weight: 900 !important;
+        border-radius: 25px !important;
         background: linear-gradient(135deg, #ff75ac 0%, #ff4757 100%) !important;
         color: #ffffff !important;
-        border: 3px solid #ffffff !important;
-        box-shadow: 0px 6px 15px rgba(255, 71, 87, 0.4) !important;
+        border: 4px solid #ffffff !important;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5) !important;
         transition: all 0.2s ease !important;
     }
     div.stButton > button:hover {
-        transform: scale(1.06) !important;
+        transform: scale(1.08) !important;
         background: linear-gradient(135deg, #ff4757 0%, #ff75ac 100%) !important;
     }
 
@@ -155,16 +170,16 @@ custom_css = """
         position: fixed;
         bottom: 12px;
         left: 15px;
-        background: rgba(255, 255, 255, 0.5);
-        color: #d63031;
+        background: rgba(0, 0, 0, 0.6);
+        color: #ffffff;
         padding: 8px 14px;
         border-radius: 12px;
         font-size: 14px;
         font-weight: bold;
         backdrop-filter: blur(6px);
         z-index: 9999;
-        border: 1px solid rgba(255,255,255,0.8);
-        box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.4);
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
     }
 </style>
 """
@@ -212,7 +227,7 @@ if st.session_state.effect_audio:
 col1, col2, col3 = st.columns([4, 1.5, 4])
 
 with col1:
-    st.markdown("<h4 style='text-align: center; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);'>🐶 BẠN</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: white; text-shadow: 2px 2px 4px #000;'>🐶 BẠN</h4>", unsafe_allow_html=True)
     if os.path.exists("assets/dog.jpg"):
         st.image("assets/dog.jpg", use_container_width=True)
     else:
@@ -222,14 +237,14 @@ with col1:
     <div class='hp-bar-container'>
         <div class='hp-bar-fill' style='width: {st.session_state.player_hp}%;'></div>
     </div>
-    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px; text-shadow:1px 1px 2px rgba(0,0,0,0.3);'>HP: {st.session_state.player_hp}/100</p>
+    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px; text-shadow:1px 1px 3px #000;'>HP: {st.session_state.player_hp}/100</p>
     """, unsafe_allow_html=True)
 
 with col2:
     st.markdown("<div class='vs-text'>VS</div>", unsafe_allow_html=True)
 
 with col3:
-    st.markdown("<h4 style='text-align: center; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);'>👶 AN NHI</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: white; text-shadow: 2px 2px 4px #000;'>👶 AN NHI</h4>", unsafe_allow_html=True)
     if os.path.exists("assets/annhi.jpg"):
         st.image("assets/annhi.jpg", use_container_width=True)
     else:
@@ -239,7 +254,7 @@ with col3:
     <div class='hp-bar-container'>
         <div class='hp-bar-fill' style='width: {st.session_state.bot_hp}%;'></div>
     </div>
-    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px; text-shadow:1px 1px 2px rgba(0,0,0,0.3);'>HP: {st.session_state.bot_hp}/100</p>
+    <p style='text-align:center; color:white; font-weight:bold; margin-top:3px; text-shadow:1px 1px 3px #000;'>HP: {st.session_state.bot_hp}/100</p>
     """, unsafe_allow_html=True)
 
 st.divider()
@@ -275,7 +290,7 @@ if st.session_state.player_hp <= 0 or st.session_state.bot_hp <= 0:
         st.rerun()
 
 else:
-    st.markdown("<h3 style='text-align:center; color:white; text-shadow:1px 1px 3px rgba(0,0,0,0.3); margin-bottom: 15px;'>🎯 Chọn nước đi của bạn:</h3>", unsafe_allow_html=True)
+    st.markdown("<div class='select-title'>🎯 Chọn nước đi của bạn:</div>", unsafe_allow_html=True)
     btn_col1, btn_col2, btn_col3 = st.columns(3)
     
     user_choice = None
@@ -287,7 +302,7 @@ else:
         user_choice = "🖐️ Bao"
 
     if user_choice:
-        # 1. ĐẾM NGƯỢC 3 2 1
+        # 1. ĐẾM NGƯỢC 3 2 1 CHẬM THÍCH HỢP (0.8s)
         for i in range(3, 0, -1):
             placeholder.markdown(f"<div class='countdown-box'><div class='countdown-text'>{i}</div></div>", unsafe_allow_html=True)
             time.sleep(0.8)
