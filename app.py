@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN HÌNH NỀN ANIME NỮ & NÚT BẤM CHỮ KHỔNG LỒ ---
+# --- CSS TÙY CHỈNH GIAO DIỆN HÌNH NỀN ANIME NỮ & THU GỌN BẠO NHẠC NỀN ---
 custom_css = """
 <style>
     #MainMenu {visibility: hidden;}
@@ -25,7 +25,7 @@ custom_css = """
         max-width: 850px !important;
     }
     
-    /* HÌNH NỀN ANIME NỮ KHỦNG/ĐẸP */
+    /* HÌNH NỀN ANIME NỮ */
     .stApp {
         background: url('https://images.alphacoders.com/132/1327129.png') no-repeat center center fixed;
         background-size: cover;
@@ -148,7 +148,7 @@ custom_css = """
         border-radius: 12px;
     }
 
-    /* PHÓNG CỰC TO NÚT CẢ KHUNG LẪN CHỮ BÊN TRONG */
+    /* PHÓNG TO NÚT KÉO BÚA BAO */
     div.stButton > button {
         height: 110px !important;
         border-radius: 25px !important;
@@ -157,7 +157,6 @@ custom_css = """
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5) !important;
         transition: all 0.2s ease !important;
     }
-    /* CANH CHỮ TRONG NÚT BẤM TO RÕ (BẮT TRÚNG THẺ P) */
     div.stButton > button div p, 
     div.stButton > button p, 
     div.stButton > button {
@@ -169,6 +168,20 @@ custom_css = """
     div.stButton > button:hover {
         transform: scale(1.08) !important;
         background: linear-gradient(135deg, #ff4757 0%, #ff75ac 100%) !important;
+    }
+
+    /* TÙY CHỈNH Ô BẬT/TẮT NHẠC NỀN TO LÊN VÀ SANG BÊN TRÁI */
+    [data-testid="stExpander"] {
+        background: rgba(0, 0, 0, 0.45) !important;
+        border: 2px solid rgba(255, 255, 255, 0.8) !important;
+        border-radius: 15px !important;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important;
+    }
+    [data-testid="stExpander"] summary div p {
+        font-size: 22px !important;
+        font-weight: bold !important;
+        color: #ffffff !important;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.6) !important;
     }
 
     /* DONATE GÓC TRÁI */
@@ -219,10 +232,12 @@ def play_sound_effect(file_path):
 # --- TIÊU ĐỀ GAME ---
 st.markdown("<div class='title-text'>💖 OẮN TÙ TÌ CÙNG AN NHI 💖</div>", unsafe_allow_html=True)
 
-# Bật/Tắt Nhạc Nền
-with st.expander("🎵 Bật/Tắt Nhạc Nền TikTok"):
-    if os.path.exists("assets/bg_sound.mp3"):
-        st.audio("assets/bg_sound.mp3", loop=True)
+# --- BẬT/TẮT NHẠC NỀN (CHO TR N CỘT TRÁI ĐỂ GỌN VÀ NỔI BẬT) ---
+music_col1, music_col2 = st.columns([3, 2])
+with music_col1:
+    with st.expander("🎵 Bật/Tắt Nhạc Nền TikTok"):
+        if os.path.exists("assets/bg_sound.mp3"):
+            st.audio("assets/bg_sound.mp3", loop=True)
 
 # Phát âm thanh hiệu ứng nếu có
 if st.session_state.effect_audio:
@@ -269,7 +284,7 @@ placeholder = st.empty()
 
 # --- BẢNG DỊCH NƯỚC ĐI CỦA MÁY ---
 winning_move_against = {
-    "✌️️ Kéo": "✊ Búa",
+    "✌️ Kéo": "✊ Búa",
     "✊ Búa": "🖐️ Bao",
     "🖐️ Bao": "✌️ Kéo"
 }
@@ -337,7 +352,7 @@ else:
         if user_choice == bot_choice:
             placeholder.markdown("<div class='big-result-draw'>🤝 HÒA RỒI!</div>", unsafe_allow_html=True)
             time.sleep(1.0)
-        elif (user_choice == "✌️️ Kéo" and bot_choice == "🖐️ Bao") or \
+        elif (user_choice == "✌️ Kéo" and bot_choice == "🖐️ Bao") or \
              (user_choice == "✊ Búa" and bot_choice == "✌️ Kéo") or \
              (user_choice == "🖐️ Bao" and bot_choice == "✊ Búa"):
             placeholder.markdown("<div class='big-result-win'>🎉 BẠN THẮNG!</div>", unsafe_allow_html=True)
